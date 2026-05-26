@@ -1,56 +1,56 @@
-import { Button, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
-import { globalStyles } from '../styles/global'
-import { useNavigation } from '@react-navigation/native'
-import { StackNavigationProp } from '@react-navigation/stack';
-import { HomeStackParamList } from '../routes/HomeStack';
- 
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
-export type SuperHero={
-  title:string;
-  rating:number;
-  body:string;
-  key:string;
-};
+import React from 'react';
 
-type HomeScreenNavigationProp = StackNavigationProp<HomeStackParamList,"Home">;
-type HomeProperties ={
-  navigation:HomeScreenNavigationProp;
-}
-//dit kunnen we ook op een andere manier doen 
-//const Home = ({navigation}: HomeProperties)
- const Home = ( ) => {
-  const [reviews, setReviews] = useState<SuperHero[]>([
-    { title: "Zelda", rating: 5, body: "lorem ipsum", key: "1" },
-    { title: "Giant", rating: 4, body: "lorem ipsum", key: "2" },
-    { title: "Mini", rating: 3, body: "lorem ipsum", key: "3" },
-  ]);
-  // een hook om navigation mee geven 
-  const navigation = useNavigation<HomeScreenNavigationProp>();
-  // je krijgt informatie binnen die kan je eruit halen
-  const pressHandler=(item:SuperHero)=>{
-    navigation.navigate("ReviewDetails", item);
-    //aangeraden manier
-    //navigation.navigate("ReviewDetails");
+import { useSelector } from 'react-redux';
 
-    // navigation.push("ReviewDetails")
-  };
+import HabitCard from '../components/HabitCard';
+
+import { RootState } from '../redux/store';
+
+const Home = () => {
+  const habits = useSelector(
+    (state: RootState) =>
+      state.habits.habits
+  );
 
   return (
-    <View style={globalStyles.container}>
+    <View style={styles.container}>
+      <Text style={styles.header}>
+        Today
+      </Text>
+
       <FlatList
-      data={reviews}
-      renderItem={({item}) => (
-        <TouchableOpacity
-            onPress={()=>pressHandler(item)}>
-          <Text style={globalStyles.titleText}>{item.title}</Text>
-
-        </TouchableOpacity>
-      )}/>
+        data={habits}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <HabitCard
+            title={item.title}
+            progress={item.progress}
+          />
+        )}
+      />
     </View>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#fff',
+  },
+
+  header: {
+    fontSize: 32,
+    fontWeight: '700',
+    marginBottom: 20,
+  },
+});
