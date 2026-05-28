@@ -30,6 +30,7 @@ const Home = () => {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <HabitCard
+          id={item.id}
             title={item.title}
             progress={item.progress}
           />

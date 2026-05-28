@@ -1,21 +1,44 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Button,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+
 import React from 'react';
 
+import { useDispatch } from 'react-redux';
+
+import { completeHabit } from '../redux/habitsSlice';
+
 type Props = {
+  id: string;
   title: string;
   progress: number;
 };
 
-const HabitCard = ({ title, progress }: Props) => {
+const HabitCard = ({
+  id,
+  title,
+  progress,
+}: Props) => {
+  const dispatch = useDispatch();
+
   return (
     <View style={styles.card}>
-      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.title}>
+        {title}
+      </Text>
 
-      <View style={styles.progressBackground}>
+      <View
+        style={styles.progressBackground}
+      >
         <View
           style={[
             styles.progressFill,
-            { width: `${progress}%` },
+            {
+              width: `${progress}%`,
+            },
           ]}
         />
       </View>
@@ -23,11 +46,23 @@ const HabitCard = ({ title, progress }: Props) => {
       <Text style={styles.progressText}>
         {progress}%
       </Text>
-      <TouchableOpacity>
-        <Text>Complete</Text>
-        </TouchableOpacity>
 
-
+      {progress === 100 ? (
+        <View style={styles.goalContainer}>
+          <Text style={styles.goalText}>
+            Goal Met
+          </Text>
+        </View>
+      ) : (
+        <Button
+          title="Complete"
+          onPress={() =>
+            dispatch(
+              completeHabit(id)
+            )
+          }
+        />
+      )}
     </View>
   );
 };
@@ -63,6 +98,20 @@ const styles = StyleSheet.create({
 
   progressText: {
     marginTop: 10,
+    marginBottom: 15,
     fontWeight: '600',
+  },
+
+  goalContainer: {
+    backgroundColor: '#b8f5b1',
+    paddingVertical: 12,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+
+  goalText: {
+    color: '#1d7a1d',
+    fontWeight: '700',
+    fontSize: 16,
   },
 });

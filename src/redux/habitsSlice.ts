@@ -11,7 +11,13 @@ type HabitState = {
 };
 
 const initialState: HabitState = {
-  habits: [],
+  habits: [
+    {
+      id: '1',
+      title: 'Drink Water',
+      progress: 50,
+    },
+  ],
 };
 
 const habitsSlice = createSlice({
@@ -26,10 +32,26 @@ const habitsSlice = createSlice({
     ) => {
       state.habits.push(action.payload);
     },
+
+    completeHabit: (
+      state,
+      action: PayloadAction<string>
+    ) => {
+      const habit = state.habits.find(
+        (habit) =>
+          habit.id === action.payload
+      );
+
+      if (habit) {
+        habit.progress = 100;
+      }
+    },
   },
 });
 
-export const { addHabit } =
-  habitsSlice.actions;
+export const {
+  addHabit,
+  completeHabit,
+} = habitsSlice.actions;
 
 export default habitsSlice.reducer;
