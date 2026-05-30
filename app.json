@@ -1,27 +1,43 @@
 {
-  // "expo": {
-  //   "name": "HabitTracker",
-  //   "slug": "HabitTracker",
-  //   "version": "1.0.0",
-  //   "orientation": "portrait",
-  //   "icon": "./assets/icon.png",
-  //   "userInterfaceStyle": "light",
-  //   "newArchEnabled": true,
-  //   "ios": {
-  //     "supportsTablet": true
-  //   },
-  //   "android": {
-  //     "adaptiveIcon": {
-  //       "foregroundImage": "./assets/adaptive-icon.png",
-  //       "backgroundColor": "#ffffff"
-  //     },
-  //     "edgeToEdgeEnabled": true,
-  //     "predictiveBackGestureEnabled": false,
-  //     "package": "com.anonymous.HabitTracker"
-  //   },
-  //   "web": {
-  //     "favicon": "./assets/favicon.png"
-  //   },
+  "expo": {
+    "name": "HabitTracker",
+    "slug": "HabitTracker",
+    "version": "1.0.0",
+    "orientation": "portrait",
+
+    "icon": "./assets/icon.png",
+
+    "userInterfaceStyle": "light",
+
+    "newArchEnabled": true,
+
+    "splash": {
+      "image": "./assets/splashscreen.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#fff4f6"
+    },
+
+    "ios": {
+      "supportsTablet": true
+    },
+
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage":
+          "./assets/adaptive-icon.png",
+
+        "backgroundColor": "#ffffff"
+      },
+
+      "edgeToEdgeEnabled": true,
+
+      "predictiveBackGestureEnabled": false
+    },
+
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+
     "plugins": [
       [
         "expo-splash-screen",
@@ -31,15 +47,17 @@
           "imageWidth": 200
         }
       ],
+
       [
         "expo-font",
         {
           "fonts": [
             "./assets/fonts/Archivo-Italic-VariableFont_wdth,wght.ttf",
+
             "./assets/fonts/Archivo-VariableFont_wdth,wght.ttf"
           ]
         }
       ]
     ]
   }
-// }
+}

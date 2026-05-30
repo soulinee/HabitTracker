@@ -1,15 +1,49 @@
-import { configureStore } from '@reduxjs/toolkit';
+import {
+  configureStore,
+} from '@reduxjs/toolkit';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import {
+  persistReducer,
+  persistStore,
+} from 'redux-persist';
+
+import {
+  PersistConfig,
+} from 'redux-persist/es/types';
+
 import habitsReducer from './habitsSlice';
 
-export const store = configureStore({
-  reducer: {
-    habits: habitsReducer,
-  },
-});
+const persistConfig: PersistConfig<any> =
+  {
+    key: 'root',
 
-export type RootState = ReturnType<
-  typeof store.getState
->;
+    storage: AsyncStorage,
+  };
 
-export type AppDispatch =
-  typeof store.dispatch;
+const persistedReducer =
+  persistReducer(
+    persistConfig,
+    habitsReducer
+  );
+
+export const store =
+  configureStore({
+    reducer: {
+      habits: persistedReducer,
+    },
+
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: false,
+      }),
+  });
+
+export const persistor =
+  persistStore(store);
+
+export type RootState =
+  ReturnType<
+    typeof store.getState
+  >;

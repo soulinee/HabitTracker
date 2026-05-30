@@ -10,44 +10,55 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 
 import { completeHabit } from '../redux/habitsSlice';
-
+import { colors } from '../constants/colors';
+import { Frequency } from '../types/Habit';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 type Props = {
   id: string;
   title: string;
   progress: number;
+  icon: string;
+  frequency: Frequency;
+  goal: string;
+  completed: boolean;
 };
 
 const HabitCard = ({
   id,
   title,
   progress,
+  icon,
+  frequency,
+  goal,
+  completed
 }: Props) => {
   const dispatch = useDispatch();
 
   return (
     <View style={styles.card}>
-      <Text style={styles.title}>
-        {title}
-      </Text>
+     <View style={styles.topRow}>
+  <View style={styles.iconContainer}>
+    <Ionicons
+      name={icon as any}
+      size={24}
+      color={colors.primary}
+    />
+  </View>
 
-      <View
-        style={styles.progressBackground}
-      >
-        <View
-          style={[
-            styles.progressFill,
-            {
-              width: `${progress}%`,
-            },
-          ]}
-        />
-      </View>
+  <View style={styles.textContainer}>
+    <Text style={styles.title}>
+      {title}
+    </Text>
 
-      <Text style={styles.progressText}>
-        {progress}%
-      </Text>
+    <Text style={styles.subtitle}>
+      {frequency} • {goal}
+    </Text>
+  </View>
+</View>
 
-      {progress === 100 ? (
+       
+
+      {completed ? (
         <View style={styles.goalContainer}>
           <Text style={styles.goalText}>
             Goal Met
@@ -71,7 +82,7 @@ export default HabitCard;
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#f7f7f7',
+    backgroundColor: colors.card,
     borderRadius: 20,
     padding: 20,
     marginBottom: 20,
@@ -114,4 +125,30 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 16,
   },
+  topRow: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginBottom: 20,
+},
+
+iconContainer: {
+  width: 55,
+  height: 55,
+  borderRadius: 50,
+  backgroundColor: '#fff',
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginRight: 15,
+},
+
+textContainer: {
+  flex: 1,
+},
+
+subtitle: {
+  color: colors.muted,
+  fontSize: 14,
+  marginTop: 4,
+  fontWeight: '500',
+},
 });

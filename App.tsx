@@ -4,12 +4,12 @@ import { StatusBar } from 'expo-status-bar';
 
 import { Provider } from 'react-redux';
 
-import { store } from './src/redux/store';
+import { store , persistor} from './src/redux/store';
 
 import BottomTabs from './src/routes/BottomTabs';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
-
+ import { PersistGate } from 'redux-persist/integration/react';
 SplashScreen.preventAutoHideAsync();
 export default function App() {
   useEffect(() => {
@@ -24,12 +24,17 @@ export default function App() {
   prepare();
 }, []);
   return (
-    <Provider store={store}>
+  <Provider store={store}>
+  <PersistGate
+    loading={null}
+    persistor={persistor}
+  >
       <NavigationContainer>
         <BottomTabs />
 
         <StatusBar style="auto" />
       </NavigationContainer>
-    </Provider>
+      </PersistGate>
+</Provider>
   );
 }
