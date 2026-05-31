@@ -8,8 +8,10 @@ import { store , persistor} from './src/redux/store';
 
 import BottomTabs from './src/routes/BottomTabs';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
  import { PersistGate } from 'redux-persist/integration/react';
+import { AuthUserProvider } from './src/contexts/AuthUserProvider';
+import RootNavigation from './src/routes/RootNavigation';
 SplashScreen.preventAutoHideAsync();
 export default function App() {
   useEffect(() => {
@@ -24,17 +26,20 @@ export default function App() {
   prepare();
 }, []);
   return (
-  <Provider store={store}>
-  <PersistGate
-    loading={null}
-    persistor={persistor}
-  >
-      <NavigationContainer>
-        <BottomTabs />
+        <AuthUserProvider>
 
-        <StatusBar style="auto" />
-      </NavigationContainer>
-      </PersistGate>
-</Provider>
+          <Provider store={store}>
+                <PersistGate
+                  loading={null}
+                  persistor={persistor}
+                >
+                    <NavigationContainer>
+                       <RootNavigation />
+
+                      <StatusBar style="auto" />
+                    </NavigationContainer>
+                 </PersistGate>
+          </Provider>
+        </AuthUserProvider>
   );
 }
