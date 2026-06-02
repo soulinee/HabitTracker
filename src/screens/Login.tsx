@@ -1,119 +1,184 @@
+import React from 'react';
 import {
-  Alert,
-  Button,
-  StyleSheet,
   Text,
   TextInput,
   View,
+  Pressable,
+   ScrollView,
+    KeyboardAvoidingView,
+    TouchableWithoutFeedback,
+    Keyboard,
+    Platform,
 } from 'react-native';
 
-import React, { useState } from 'react';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 
 import {
-  getAuth,
   signInWithEmailAndPassword,
+  getAuth,
 } from 'firebase/auth';
-import { useNavigation }
-from '@react-navigation/native';
+
+import { useNavigation } from '@react-navigation/native';
+import { globalStyles } from '../styles/global';
+
+ 
+
+const auth = getAuth();
+
+const LoginSchema = Yup.object({
+  email: Yup.string()
+    .email('Invalid email')
+    .required('Email is required'),
+
+  password: Yup.string()
+    .required('Password is required'),
+});
 
 const Login = () => {
-  const navigation =
-  useNavigation<any>();
-  const auth = getAuth();
-
-  const [email, setEmail] =
-    useState('');
-
-  const [password, setPassword] =
-    useState('');
-
-  const handleLogin = () => {
-    if (!email || !password) {
-      Alert.alert(
-        'Error',
-        'Fill in all fields'
-      );
-
-      return;
-    }
-
-    signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    )
-      .then(() => {
-        Alert.alert(
-          'Success',
-          'Logged in successfully'
-        );
-      })
-      .catch((error) => {
-        Alert.alert(
-          'Login Error',
-          error.message
-        );
-      });
-  };
+  const navigation = useNavigation<any>();
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>
-        Login
-      </Text>
+     <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior="height"
+      >
+        <TouchableWithoutFeedback
+          onPress={Keyboard.dismiss}
+        >
+          <ScrollView
+            style={globalStyles.container}
+              contentContainerStyle={
+    globalStyles.contentContainer
+  }
+            keyboardShouldPersistTaps="handled"
+          > 
+    <Formik
+      initialValues={{
+        email: '',
+        password: '',
+      }}
+      validationSchema={LoginSchema}
+      onSubmit={async (
+        values,
+        { setFieldError }
+      ) => {
+        try {
+          await signInWithEmailAndPassword(
+            auth,
+            values.email,
+            values.password
+          );
+        } catch {
+          setFieldError(
+            'password',
+            'Wrong email or password'
+          );
+        }
+      }}
+    >
+      {({
+        handleChange,
+        handleBlur,
+        handleSubmit,
+        values,
+        errors,
+        touched,
+      }) => (
+        <View style={globalStyles.formContainer}>
+          <Text style={globalStyles.titleText}>
+            Login
+          </Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        value={email}
-        onChangeText={setEmail}
-      />
+          <TextInput
+            style={globalStyles.input}
+            placeholder="Email"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            value={values.email}
+            onChangeText={handleChange(
+              'email'
+            )}
+            onBlur={handleBlur(
+              'email'
+            )}
+          />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
+          {touched.email &&
+            errors.email && (
+              <Text
+                style={
+                  globalStyles.errorText
+                }
+              >
+                {errors.email}
+              </Text>
+            )}
 
-      <Button
-        title="Login"
-        onPress={handleLogin}
-      />
-      <Button
-      title="Ga naar Register"
-      onPress={() =>
-        navigation.navigate('Register')
-      }
-    />
-    </View>
+          <TextInput
+            style={globalStyles.input}
+            placeholder="Password"
+            secureTextEntry
+            value={values.password}
+            onChangeText={handleChange(
+              'password'
+            )}
+            onBlur={handleBlur(
+              'password'
+            )}
+          />
+
+          {touched.password &&
+            errors.password && (
+              <Text
+                style={
+                  globalStyles.errorText
+                }
+              >
+                {errors.password}
+              </Text>
+            )}
+
+          <Pressable
+            style={globalStyles.button}
+            onPress={() =>
+              handleSubmit()
+            }
+          >
+            <Text
+              style={
+                globalStyles.buttonText
+              }
+            >
+              LOGIN
+            </Text>
+          </Pressable>
+
+          <Pressable
+            style={
+              globalStyles.secondaryButton
+            }
+            onPress={() =>
+              navigation.navigate(
+                'Register'
+              )
+            }
+          >
+            <Text
+              style={
+                globalStyles.buttonText
+              }
+            >
+              GO TO REGISTER
+            </Text>
+          </Pressable>
+        </View>
+      )}
+    </Formik>
+     </ScrollView>
+         </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
   );
 };
 
 export default Login;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-  },
-
-  title: {
-    fontSize: 32,
-    fontWeight: '700',
-    marginBottom: 30,
-    textAlign: 'center',
-  },
-
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 15,
-  },
-});

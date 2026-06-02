@@ -1,11 +1,25 @@
+import React from 'react';
+
 import {
   Image,
+  Pressable,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
 
-import { colors } from '../constants/colors';
+import {
+  getAuth,
+  signOut,
+} from 'firebase/auth';
+
+import Ionicons
+from '@expo/vector-icons/Ionicons';
+
+import { colors }
+from '../constants/colors';
+
+ import { globalStyles } from '../styles/global';
 
 type Props = {
   title: string;
@@ -14,55 +28,78 @@ type Props = {
 export default function Header({
   title,
 }: Props) {
-  return (
-    <View style={styles.wrapper}>
-      <View style={styles.container}>
-        <Image
-          source={require('../../assets/icon1.png')}
-          style={styles.logo}
-        />
 
-        <Text style={styles.title}>
-          {title}
-        </Text>
+  const auth = getAuth();
+
+  const user =
+    auth.currentUser;
+
+  const firstLetter =
+    user?.displayName
+      ?.charAt(0)
+      .toUpperCase() || '?';
+
+  const handleLogout =
+    async () => {
+      await signOut(auth);
+    };
+
+  return (
+    <View style={globalStyles.wrapper}>
+
+      <View style={globalStyles.headerContainer}>
+
+        <View
+          style={globalStyles.leftSection}
+        >
+          <Image
+            source={require('../../assets/icon1.png')}
+            style={globalStyles.logo}
+          />
+
+          <Text
+            style={
+              globalStyles.headerTitle
+            }
+          >
+            {title}
+          </Text>
+        </View>
+
+        <View
+          style={globalStyles.rightSection}
+        >
+          <View
+            style={globalStyles.avatar}
+          >
+            <Text
+              style={
+                globalStyles.avatarText
+              }
+            >
+              {firstLetter}
+            </Text>
+          </View>
+
+          <Pressable
+            onPress={
+              handleLogout
+            }
+          >
+            <Ionicons
+              name="log-out-outline"
+              size={28}
+              color={
+                colors.primary
+              }
+            />
+          </Pressable>
+        </View>
+
       </View>
 
-      <View style={styles.line} />
+      <View style={globalStyles.line} />
+
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  wrapper: {
-    marginBottom: 25,
-  },
-
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingTop: 10,
-    paddingHorizontal: 10,
-  },
-
-  logo: {
-    width: 52,
-    height: 52,
-    resizeMode: 'contain',
-    marginRight: 10,
-  },
-
-  title: {
-    fontSize: 42,
-    fontWeight: '700',
-    color: colors.primary,
-  },
-
-  line: {
-    marginTop: 10,
-    height: 4,
-    width: '100%',
-    backgroundColor: colors.primaryLight,
-    borderRadius: 20,
-    opacity: 0.4,
-  },
-});

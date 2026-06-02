@@ -5,7 +5,7 @@ import {
   View,
 } from 'react-native';
 
-import React from 'react';
+import React, { useState } from 'react';
 
 import { useSelector } from 'react-redux';
 
@@ -20,6 +20,11 @@ const Home = () => {
     (state: RootState) =>
       state.habits.habits
   );
+  const [selectedHabit, setSelectedHabit] =
+  useState(null);
+
+const [modalVisible, setModalVisible] =
+  useState(false);
 
   return (
     <View style={styles.container}>
@@ -32,15 +37,16 @@ const Home = () => {
         data={habits}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-         <HabitCard
-          id={item.id}
-          title={item.title}
-          progress={item.progress}
-          icon={item.icon}
-          frequency={item.frequency}
-          goal={item.goal}
-          completed={item.completed}
-        />
+        //  <HabitCard
+        //   id={item.id}
+        //   title={item.title}
+        //   progress={item.progress}
+        //   icon={item.icon}
+        //   frequency={item.frequency}
+        //   goal={item.goal}
+        //   completed={item.completed}
+        // />
+        
         )}
       />
     </View>
