@@ -26,6 +26,11 @@ import { Frequency, Habit } from '../types/Habit';
 import { addHabit } from '../redux/habitsSlice';
 
 import { colors } from '../constants/colors';
+import { auth }
+from '../Firebase';
+
+import { saveHabit }
+from '../services/habitService';
 
 const Add = () => {
   const [habit, setHabit] =
@@ -41,33 +46,46 @@ const [goal, setGoal] =
 
   const dispatch = useDispatch();
 
-  const addHabitHandler = () => {
-        if (!habit.trim()) return;
+  const addHabitHandler = async () => {
+  if (!habit.trim()) return;
 
-      const newHabit: Habit = {
-      id: Math.random().toString(),
+  const newHabit: Habit = {
+    id: Math.random().toString(),
 
-      title: habit,
+    title: habit,
 
-      progress: 0,
+    progress: 0,
 
-      icon: selectedIcon,
+    icon: selectedIcon,
 
-      frequency,
+    frequency,
 
-      goal,
+    goal,
 
-      completed: false,
-    };
+    completed: false,
+  };
 
-        dispatch(addHabit(newHabit));
+  dispatch(
+    addHabit(newHabit)
+  );
 
-        setHabit('');
-          Alert.alert(
+  const uid =
+    auth.currentUser?.uid;
+
+  if (uid) {
+    await saveHabit(
+      uid,
+      newHabit
+    );
+  }
+
+  setHabit('');
+
+  Alert.alert(
     'Success',
     'Habit saved successfully'
   );
-  };
+};
 
   return (
     <KeyboardAvoidingView

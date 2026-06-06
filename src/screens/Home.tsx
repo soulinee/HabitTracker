@@ -1,5 +1,6 @@
 import {
   FlatList,
+  Pressable,
   StyleSheet,
   Text,
   View,
@@ -14,17 +15,17 @@ import HabitCard from '../components/HabitCard';
 import { RootState } from '../redux/store';
 import Header from '../components/Header';
 import { colors } from '../constants/colors';
+import EditHabitModal from '../components/EditHabitModal';
+import { Habit } from '../types/Habit';
 
 const Home = () => {
   const habits = useSelector(
     (state: RootState) =>
       state.habits.habits
   );
-  const [selectedHabit, setSelectedHabit] =
-  useState(null);
+  const [selectedHabit, setSelectedHabit] =useState<Habit | null>( null );
 
-const [modalVisible, setModalVisible] =
-  useState(false);
+const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <View style={styles.container}>
@@ -46,8 +47,31 @@ const [modalVisible, setModalVisible] =
         //   goal={item.goal}
         //   completed={item.completed}
         // />
-        
+        <Pressable
+          onPress={() => {
+            setSelectedHabit(item);
+            setModalVisible(true);
+          }}
+        >
+          <HabitCard
+            id={item.id}
+            title={item.title}
+            progress={item.progress}
+            icon={item.icon}
+            frequency={item.frequency}
+            goal={item.goal}
+            completed={item.completed}
+          />
+        </Pressable>
         )}
+      />
+
+      <EditHabitModal
+        visible={modalVisible}
+        habit={selectedHabit}
+        onClose={() =>
+          setModalVisible(false)
+        }
       />
     </View>
   );

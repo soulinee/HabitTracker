@@ -23,6 +23,7 @@ type Props = {
   completed: boolean;
 };
 
+
 const HabitCard = ({
   id,
   title,
@@ -71,6 +72,8 @@ const HabitCard = ({
             dispatch(
               completeHabit(id)
             )
+            
+            
           }
         />
       )}

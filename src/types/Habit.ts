@@ -4,6 +4,8 @@ export type Frequency =
   | 'Monthly';
 
 export type Habit = {
+  firestoreId?: string;
+
   id: string;
 
   title: string;

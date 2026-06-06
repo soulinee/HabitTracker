@@ -139,5 +139,87 @@ line: {
     colors.primaryLight,
   borderRadius: 20,
   opacity: 0.4,
+},modalOverlay: {
+  flex: 1,
+  backgroundColor:
+    'rgba(0,0,0,0.4)',
+  justifyContent: 'center',
+  padding: 20,
+},
+
+modalContainer: {
+  backgroundColor:
+    colors.card,
+  borderRadius: 25,
+  padding: 25,
+},
+
+modalTitle: {
+  fontSize: 24,
+  fontWeight: '700',
+  color: colors.textDark,
+  marginBottom: 20,
+  textAlign: 'center',
+},
+
+modalButtons: {
+  flexDirection: 'row',
+  justifyContent:
+    'space-between',
+  marginTop: 20,
+},
+
+modalButton: {
+  flex: 1,
+  backgroundColor:
+    colors.primary,
+  paddingVertical: 15,
+  borderRadius: 15,
+  alignItems: 'center',
+},
+
+modalCancelButton: {
+  flex: 1,
+  backgroundColor:
+    colors.muted,
+  paddingVertical: 15,
+  borderRadius: 15,
+  alignItems: 'center',
+  marginLeft: 10,
+},
+label: {
+  fontSize: 16,
+  color: colors.textDark,
+  fontWeight: '600',
+  marginBottom: 10,
+},
+
+frequencyRow: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  marginBottom: 20,
+},
+
+frequencyButton: {
+  flex: 1,
+  paddingVertical: 12,
+  borderWidth: 1,
+  borderColor: colors.muted,
+  borderRadius: 15,
+  alignItems: 'center',
+  backgroundColor: '#fff',
+  marginHorizontal: 4,
+},
+
+selectedFrequency: {
+  backgroundColor:
+    colors.primaryLight,
+  borderColor:
+    colors.primary,
+},
+
+frequencyText: {
+  color: colors.textDark,
+  fontWeight: '600',
 },
   });

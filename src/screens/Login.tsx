@@ -21,6 +21,9 @@ import {
 
 import { useNavigation } from '@react-navigation/native';
 import { globalStyles } from '../styles/global';
+import { loadHabits } from '../services/habitService';
+import { setHabits } from '../redux/habitsSlice';
+import { useDispatch } from 'react-redux';
 
  
 
@@ -37,6 +40,8 @@ const LoginSchema = Yup.object({
 
 const Login = () => {
   const navigation = useNavigation<any>();
+   const dispatch =
+    useDispatch();
 
   return (
      <KeyboardAvoidingView
@@ -69,6 +74,25 @@ const Login = () => {
             values.email,
             values.password
           );
+          console.log(
+            'UID:',
+            auth.currentUser?.uid
+          );
+
+          const habits =
+              await loadHabits(
+                auth.currentUser!.uid
+              );
+              console.log(
+                'LOADED HABITS:',
+                habits
+              );
+
+              dispatch(
+              setHabits(habits)
+              );
+
+
         } catch {
           setFieldError(
             'password',

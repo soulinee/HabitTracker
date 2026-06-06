@@ -63,12 +63,43 @@ const habitsSlice = createSlice({
         habit.completed = true;
       }
     },
-  },
+    updateHabit: (
+          state,
+          action
+        ) => {
+
+          const index =
+            state.habits.findIndex(
+              h =>
+                h.id ===
+                action.payload.id
+            );
+
+          if (index !== -1) {
+
+            state.habits[index] = {
+              ...state.habits[index],
+              ...action.payload,
+            };
+          }
+      },
+
+       setHabits: (
+        state,
+        action
+        ) => {
+
+        state.habits =
+          action.payload;
+        },
+    },
 });
 
 export const {
   addHabit,
   completeHabit,
+  updateHabit,
+  setHabits,
 } = habitsSlice.actions;
 
 export default habitsSlice.reducer;
