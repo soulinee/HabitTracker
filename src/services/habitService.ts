@@ -11,24 +11,70 @@ from '../Firebase';
 
 import { Habit }
 from '../types/Habit';
+import {
+  Frequency,
+} from '../types/Habit';
 
-export const saveHabit =
-async (
- userId: string,
- habit: Habit
-) => {
-
- await addDoc(
-   collection(
-     db,
-     'users',
-     userId,
-     'habits'
-   ),
-   habit
- );
+type UpdateHabitData = {
+  title: string;
+  goal: string;
+  frequency: Frequency;
+  completed: boolean;
 };
 
+export const updateHabitInFirestore =
+  async (
+    userId: string,
+    firestoreId: string,
+    data: UpdateHabitData
+  ) => {
+
+    await updateDoc(
+      doc(
+        db,
+        'users',
+        userId,
+        'habits',
+        firestoreId
+      ),
+      data
+    );
+  };
+// export const saveHabit =
+// async (
+//  userId: string,
+//  habit: Habit
+// ) => {
+
+//  await addDoc(
+//    collection(
+//      db,
+//      'users',
+//      userId,
+//      'habits'
+//    ),
+//    habit
+//  );
+// };
+export const saveHabit =
+    async (
+    userId: string,
+    habit: Habit
+    ) => {
+
+    const docRef =
+        await addDoc(
+        collection(
+            db,
+            'users',
+            userId,
+            'habits'
+        ),
+        habit
+        );
+
+    return docRef.id;
+    };
 export const loadHabits =
 async (
  userId: string
@@ -51,6 +97,7 @@ async (
    })
  );
 };
+
 export const completeHabitInFirestore =
 async (
   userId: string,

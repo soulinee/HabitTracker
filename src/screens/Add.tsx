@@ -35,58 +35,63 @@ from '../services/habitService';
 const Add = () => {
   const [habit, setHabit] =
     useState('');
-    const [selectedIcon, setSelectedIcon] =
-  useState('fitness');
+    const [selectedIcon, setSelectedIcon] = useState('fitness');
 
-const [frequency, setFrequency] =
-  useState<Frequency>('Daily');
+const [frequency, setFrequency] = useState<Frequency>('Daily');
 
-const [goal, setGoal] =
-  useState('');
+const [goal, setGoal] = useState('');
 
   const dispatch = useDispatch();
+  const [showSuccess,setShowSuccess] = useState(false);
 
-  const addHabitHandler = async () => {
-  if (!habit.trim()) return;
+ const addHabitHandler =
+  async () => {
 
-  const newHabit: Habit = {
-    id: Math.random().toString(),
+    if (!habit.trim())
+      return;
 
-    title: habit,
+    const uid =
+      auth.currentUser?.uid;
 
-    progress: 0,
+    if (!uid) return;
 
-    icon: selectedIcon,
+    const newHabit: Habit = {
+      id: Math.random().toString(),
 
-    frequency,
+      title: habit,
 
-    goal,
+      progress: 0,
 
-    completed: false,
-  };
+      icon: selectedIcon,
 
-  dispatch(
-    addHabit(newHabit)
-  );
+      frequency,
 
-  const uid =
-    auth.currentUser?.uid;
+      goal,
 
-  if (uid) {
-    await saveHabit(
-      uid,
-      newHabit
+      completed: false,
+    };
+
+    const firestoreId =
+      await saveHabit(
+        uid,
+        newHabit
+      );
+
+    dispatch(
+      addHabit({
+        ...newHabit,
+        firestoreId,
+      })
     );
-  }
 
-  setHabit('');
+    setHabit('');
 
-  Alert.alert(
-    'Success',
-    'Habit saved successfully'
-  );
+    setShowSuccess(true);
+
+    setTimeout(() => {
+      setShowSuccess(false);
+    }, 2000);
 };
-
   return (
     <KeyboardAvoidingView
     style={{ flex: 1 }}
@@ -280,6 +285,18 @@ const [goal, setGoal] =
       />
       </View>
 
+      {showSuccess && (
+        <View
+          style={styles.successBox}
+        >
+          <Text
+            style={styles.successText}
+          >
+            ✓ Habit saved successfully
+          </Text>
+        </View>
+      )}
+
       {/* Button */}
 
       <Pressable
@@ -313,6 +330,19 @@ const styles = StyleSheet.create({
     padding: 20,
     marginBottom: 20,
   },
+  successBox: {
+  backgroundColor: '#dff6dd',
+  padding: 15,
+  borderRadius: 20,
+  marginBottom: 20,
+  alignItems: 'center',
+},
+
+successText: {
+  color: '#2e7d32',
+  fontWeight: '700',
+  fontSize: 16,
+},
 
   label: {
     fontSize: 16,

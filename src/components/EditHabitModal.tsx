@@ -11,7 +11,10 @@ import { useDispatch } from 'react-redux';
 import { updateHabit } from '../redux/habitsSlice';
 import { Frequency, Habit } from '../types/Habit';
 import { globalStyles } from '../styles/global';
+import { auth }
+from '../Firebase';
 
+import { updateHabitInFirestore} from '../services/habitService';
 type Props = {
   visible: boolean;
   habit: Habit | null;
@@ -29,31 +32,44 @@ const EditHabitModal = ({
 
   const [frequency,setFrequency] =useState<Frequency>('Daily');
     const dispatch = useDispatch();
- const handleSave = () => {
 
-  if (!habit) return;
-  const goalChanged =
-  goal !== habit.goal;
+ const handleSave = async () => {
 
-const frequencyChanged =
-  frequency !==
-  habit.frequency;
+     if (!habit) return;
+    const goalChanged = goal !== habit.goal; 
+    const frequencyChanged = frequency !== habit.frequency;
+  const updatedCompleted =
+        goalChanged ||
+        frequencyChanged
+            ? false
+            : habit.completed;
 
-  dispatch(
-    updateHabit({
-      id: habit.id,
+    dispatch(
+        updateHabit({
+            id: habit.id,
+            title,
+            goal,
+            frequency,
+            completed:
+            updatedCompleted,
+        })
+    );
+    if (
+  auth.currentUser &&
+  habit.firestoreId
+) {
+  await updateHabitInFirestore(
+    auth.currentUser.uid,
+    habit.firestoreId,
+    {
       title,
       goal,
       frequency,
-       completed:
-      goalChanged ||
-      frequencyChanged
-        ? false
-        : habit.completed,
-
-
-    })
+      completed:
+        updatedCompleted,
+    }
   );
+}
 
   onClose();
 };

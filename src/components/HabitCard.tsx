@@ -13,7 +13,10 @@ import { completeHabit } from '../redux/habitsSlice';
 import { colors } from '../constants/colors';
 import { Frequency } from '../types/Habit';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { auth } from '../Firebase';
+import { completeHabitInFirestore } from '../services/habitService';
 type Props = {
+   firestoreId?: string;
   id: string;
   title: string;
   progress: number;
@@ -23,8 +26,9 @@ type Props = {
   completed: boolean;
 };
 
-
+ 
 const HabitCard = ({
+  firestoreId,
   id,
   title,
   progress,
@@ -34,6 +38,37 @@ const HabitCard = ({
   completed
 }: Props) => {
   const dispatch = useDispatch();
+  console.log(
+  title,
+  firestoreId,
+  completed
+);
+
+  const handleComplete = async () => {
+  dispatch(
+    completeHabit(id)
+  );
+
+  if (
+    auth.currentUser &&
+    firestoreId
+  )
+  
+   {
+    console.log(
+  'FirestoreId:',
+  firestoreId
+  );
+  console.log(
+    'UserId:',
+    auth.currentUser?.uid
+  );
+    await completeHabitInFirestore(
+      auth.currentUser.uid,
+      firestoreId
+    );
+  }
+};
 
   return (
     <View style={styles.card}>
@@ -68,13 +103,7 @@ const HabitCard = ({
       ) : (
         <Button
           title="Complete"
-          onPress={() =>
-            dispatch(
-              completeHabit(id)
-            )
-            
-            
-          }
+          onPress={handleComplete}
         />
       )}
     </View>

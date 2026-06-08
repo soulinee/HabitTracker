@@ -20,3 +20,9 @@ export type Habit = {
 
   completed: boolean;
 };
+
+export type RootTabParamList = {
+  Home: undefined;
+  Reports: undefined;
+  Add: undefined;
+};
