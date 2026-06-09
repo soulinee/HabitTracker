@@ -13,17 +13,20 @@ import {
 
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-
+ import { FirebaseError }
+from 'firebase/app';
 import {
   createUserWithEmailAndPassword,
   getAuth,
 } from 'firebase/auth';
-import { updateProfile }
+import { updateProfile, reload }
 from 'firebase/auth';
 
 import { useNavigation } from '@react-navigation/native';
 
 import { globalStyles } from '../styles/global';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { AuthStackParamList } from '../types/RootNavigation';
 
 const auth = getAuth();
 
@@ -67,9 +70,15 @@ const RegisterSchema =
   });
 
 const Register = () => {
+  type LoginScreenNavigationProp =
+  NativeStackNavigationProp<
+    AuthStackParamList,
+    'Register'
+  >;
   const navigation =
-    useNavigation<any>();
-
+  useNavigation<
+    LoginScreenNavigationProp
+  >();
  return (
   <KeyboardAvoidingView
     style={{ flex: 1 }}
@@ -100,7 +109,11 @@ const Register = () => {
   { setFieldError }
 ) => {
   try {
-
+// createUserWithEmailAndPassword doet twee dingen:
+// maakt de gebruiker aan
+//logt de gebruiker onmiddelijk in
+//vervolgens wordt AuthUserProvider op de hoogte gebracht 
+//daarna const { user } = useAuth(); in rootnavigation krijgt een waarde
     const userCredential =
       await createUserWithEmailAndPassword(
         auth,
@@ -113,9 +126,23 @@ const Register = () => {
       {
         displayName: values.name,
       }
-    );
 
-  } catch (error: any) {
+
+    );
+    await reload(
+  userCredential.user
+);
+console.log(
+  'After reload:',
+  auth.currentUser?.displayName
+);
+
+  } catch (error) {
+
+  if (
+    error instanceof
+    FirebaseError
+  ) {
 
     if (
       error.code ===
@@ -131,8 +158,9 @@ const Register = () => {
         'Registration failed'
       );
     }
-  }
+  }}
 }}
+
         >
           {({
             handleChange,

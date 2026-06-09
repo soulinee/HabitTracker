@@ -10,7 +10,7 @@ import {
 type HabitState = {
   habits: Habit[];
 };
-
+//beginwaarden van mijn state
 const initialState: HabitState = {
   habits: [
     {
@@ -35,8 +35,9 @@ const habitsSlice = createSlice({
   name: 'habits',
 
   initialState,
-
+//logic that changes state = reducers
   reducers: {
+    //addHabit is een reducerfunctie
     addHabit: (
       state,
       action: PayloadAction<Habit>
@@ -92,6 +93,9 @@ const habitsSlice = createSlice({
         state.habits =
           action.payload;
         },
+        clearHabits: (state) => {
+        state.habits = [];
+},
     },
 });
 
@@ -100,6 +104,7 @@ export const {
   completeHabit,
   updateHabit,
   setHabits,
+  clearHabits
 } = habitsSlice.actions;
 
 export default habitsSlice.reducer;

@@ -49,12 +49,12 @@ const [goal, setGoal] = useState('');
 
     if (!habit.trim())
       return;
-
+    //optional chaining controleren of currentuser bestaat voordat ik uid opvraag 
     const uid =
       auth.currentUser?.uid;
 
     if (!uid) return;
-
+  // nieuwe habit object aanmaken wnr ik op save klik
     const newHabit: Habit = {
       id: Math.random().toString(),
 
@@ -70,14 +70,15 @@ const [goal, setGoal] = useState('');
 
       completed: false,
     };
-
+    // ik stuur de object naar firestore
     const firestoreId =
       await saveHabit(
         uid,
         newHabit
       );
-
+      //functie van redux
     dispatch(
+      //addHabit is action 
       addHabit({
         ...newHabit,
         firestoreId,

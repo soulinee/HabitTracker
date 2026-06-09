@@ -23,5 +23,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 //dit haalt deAuthentication service op van mijn firebase app
 export const auth = getAuth(app);
+//dit haalt firestore service op van mijn firebase app
 export const db = getFirestore(app);
 

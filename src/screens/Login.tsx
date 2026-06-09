@@ -24,7 +24,12 @@ import { globalStyles } from '../styles/global';
 import { loadHabits } from '../services/habitService';
 import { setHabits } from '../redux/habitsSlice';
 import { useDispatch } from 'react-redux';
+ 
 
+import {
+  NativeStackNavigationProp,
+} from '@react-navigation/native-stack';
+import { AuthStackParamList } from '../types/RootNavigation';
  
 
 const auth = getAuth();
@@ -39,7 +44,15 @@ const LoginSchema = Yup.object({
 });
 
 const Login = () => {
-  const navigation = useNavigation<any>();
+  type LoginScreenNavigationProp =
+  NativeStackNavigationProp<
+    AuthStackParamList,
+    'Login'
+  >;
+  const navigation =
+  useNavigation<
+    LoginScreenNavigationProp
+  >();
    const dispatch =
     useDispatch();
 

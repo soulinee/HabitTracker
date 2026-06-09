@@ -20,6 +20,8 @@ import { colors }
 from '../constants/colors';
 
  import { globalStyles } from '../styles/global';
+import { useDispatch } from 'react-redux';
+import { clearHabits } from '../redux/habitsSlice';
 
 type Props = {
   title: string;
@@ -30,7 +32,8 @@ export default function Header({
 }: Props) {
 
   const auth = getAuth();
-
+const dispatch =
+  useDispatch();
   const user =
     auth.currentUser;
 
@@ -41,8 +44,14 @@ export default function Header({
 
   const handleLogout =
     async () => {
+      dispatch(
+    clearHabits());
       await signOut(auth);
     };
+    console.log(
+  'DisplayName:',
+  user?.displayName
+);
 
   return (
     <View style={globalStyles.wrapper}>

@@ -14,6 +14,7 @@ const Stack =
   createNativeStackNavigator();
 
 export default function RootNavigation() {
+  //controleren of er een ingelogde gebruiker is
   const { user, isLoading } =
     useAuth();
 
@@ -25,6 +26,7 @@ export default function RootNavigation() {
         headerShown: false,
       }}
     >
+      {/* als de user ingelogd is wordt de bottomTabs geladen */}
       {user ? (
         <Stack.Screen
           name="App"
