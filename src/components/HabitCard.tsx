@@ -24,6 +24,8 @@ type Props = {
   frequency: Frequency;
   goal: string;
   completed: boolean;
+  streak: number;
+
 };
 
  
@@ -35,7 +37,8 @@ const HabitCard = ({
   icon,
   frequency,
   goal,
-  completed
+  completed,
+  streak
 }: Props) => {
   const dispatch = useDispatch();
   console.log(
@@ -48,7 +51,8 @@ const HabitCard = ({
   dispatch(
     completeHabit(id)
   );
-
+  const updatedStreak =
+  streak + 1;
   if (
     auth.currentUser &&
     firestoreId
@@ -65,7 +69,8 @@ const HabitCard = ({
   );
     await completeHabitInFirestore(
       auth.currentUser.uid,
-      firestoreId
+      firestoreId,
+      updatedStreak
     );
   }
 };

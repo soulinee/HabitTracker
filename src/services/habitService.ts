@@ -78,7 +78,7 @@ export const saveHabit =
 export const loadHabits =
 async (
  userId: string
-) => {
+): Promise<Habit[]> => {
 //inshallah
  const snapshot =
    await getDocs(
@@ -90,20 +90,23 @@ async (
      )
    );
 
- return snapshot.docs.map(
-   doc => ({
-     firestoreId: doc.id,
-     ...doc.data(),
-   })
- );
+return snapshot.docs.map(
+    document => ({
+      firestoreId:
+        document.id,
+      ...(document.data() as Omit<Habit, 'firestoreId'>),
+    })
+  );
 };
 
 export const completeHabitInFirestore =
+//parameters
 async (
   userId: string,
-  firestoreId: string
+  firestoreId: string,
+  streak: number
 ) => {
-
+//pad naar gebruiker habit
   await updateDoc(
     doc(
       db,
@@ -115,6 +118,11 @@ async (
     {
       completed: true,
       progress: 100,
+      streak,
+       lastCompletedDate:
+      new Date()
+        .toISOString()
+        .split('T')[0],
     }
   );
 };

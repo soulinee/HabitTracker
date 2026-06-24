@@ -12,23 +12,7 @@ type HabitState = {
 };
 //beginwaarden van mijn state
 const initialState: HabitState = {
-  habits: [
-    {
-      id: '1',
-
-      title: 'Drink Water',
-
-      progress: 50,
-
-      icon: 'water',
-
-      frequency: 'Daily',
-
-      goal: '3000 ml',
-
-      completed: false,
-    },
-  ],
+  habits: [],
 };
 
 const habitsSlice = createSlice({
@@ -60,8 +44,14 @@ const habitsSlice = createSlice({
 
       if (habit) {
         habit.progress = 100;
-
+         const today =
+        new Date()
+          .toISOString()
+          .split('T')[0];
+        habit.progress = 100;
+        habit.streak +=1;
         habit.completed = true;
+        habit.lastCompletedDate = today;
       }
     },
     updateHabit: (

@@ -17,8 +17,10 @@ export type Habit = {
   frequency: Frequency;
 
   goal: string;
+  streak: number;
 
   completed: boolean;
+  lastCompletedDate: string | null;
 };
 
 export type RootTabParamList = {

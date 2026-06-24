@@ -43,56 +43,89 @@ const [goal, setGoal] = useState('');
 
   const dispatch = useDispatch();
   const [showSuccess,setShowSuccess] = useState(false);
+ const [error, setError] = useState('');
 
- const addHabitHandler =
-  async () => {
+  const addHabitHandler =
+      async () => {
+    try{
 
-    if (!habit.trim())
-      return;
-    //optional chaining controleren of currentuser bestaat voordat ik uid opvraag 
-    const uid =
-      auth.currentUser?.uid;
+          if (
+        !habit.trim() ||
+        !goal.trim()
+      ) {
+        setError(
+          'Please fill in all fields'
+        );
+        return;
+      }
 
-    if (!uid) return;
-  // nieuwe habit object aanmaken wnr ik op save klik
-    const newHabit: Habit = {
-      id: Math.random().toString(),
-
-      title: habit,
-
-      progress: 0,
-
-      icon: selectedIcon,
-
-      frequency,
-
-      goal,
-
-      completed: false,
-    };
-    // ik stuur de object naar firestore
-    const firestoreId =
-      await saveHabit(
-        uid,
-        newHabit
+          setError('');
+      //optional chaining controleren of currentuser bestaat voordat ik uid opvraag 
+      const uid =
+        auth.currentUser?.uid;
+  
+      if (!uid) return;
+    // nieuwe habit object aanmaken wnr ik op save klik
+      const newHabit: Habit = {
+        id: Math.random().toString(),
+  
+        title: habit,
+  
+        progress: 0,
+  
+        icon: selectedIcon,
+  
+        frequency,
+  
+        goal,
+  
+        completed: false,
+        streak: 0,
+        lastCompletedDate: null,
+      };
+      console.log(
+    "Saving habit..."
+  );
+    
+      // ik stuur de object naar firestore
+      const firestoreId =
+        await saveHabit(
+          uid,
+          newHabit
+        );
+        console.log(
+          "Firestore ID:",
+          firestoreId
+        );
+        //functie van redux
+      dispatch(
+        //addHabit is action 
+        addHabit({
+          ...newHabit,
+          firestoreId,
+        })
       );
-      //functie van redux
-    dispatch(
-      //addHabit is action 
-      addHabit({
-        ...newHabit,
-        firestoreId,
-      })
-    );
-
-    setHabit('');
-
-    setShowSuccess(true);
-
-    setTimeout(() => {
-      setShowSuccess(false);
-    }, 2000);
-};
+      console.log(
+    "Redux addHabit dispatched"
+  );
+      
+  
+      setHabit('');
+      setGoal('');
+  
+      setShowSuccess(true);
+  
+      setTimeout(() => {
+        setShowSuccess(false);
+      }, 2000);
+    } catch (error) {
+          console.log(
+            "SAVE ERROR:",
+            error
+          );
+        }
+ };
+ 
   return (
     <KeyboardAvoidingView
     style={{ flex: 1 }}
@@ -128,7 +161,10 @@ const [goal, setGoal] = useState('');
           }
           style={styles.input}
           value={habit}
-          onChangeText={setHabit}
+           onChangeText={(text) => {
+            setHabit(text);
+            setError('');
+          }}
         />
       </View>
 
@@ -282,7 +318,10 @@ const [goal, setGoal] = useState('');
         }
         style={styles.input}
         value={goal}
-        onChangeText={setGoal}
+         onChangeText={(text) => {
+          setGoal(text);
+          setError('');
+        }}
       />
       </View>
 
@@ -299,6 +338,17 @@ const [goal, setGoal] = useState('');
       )}
 
       {/* Button */}
+      {error ? (
+        <Text
+          style={{
+            color: 'red',
+            marginBottom: 15,
+            textAlign: 'center',
+          }}
+        >
+          {error}
+        </Text>
+      ) : null}
 
       <Pressable
         style={styles.button}
@@ -321,7 +371,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor:
       colors.background,
-    paddingHorizontal: 20,
+    padding: 20,
   },
 
   section: {
@@ -351,6 +401,12 @@ successText: {
     color: colors.primary,
     marginBottom: 20,
   },
+   header: {
+  fontSize: 24,
+  fontWeight: '700',
+  color: colors.textDark,
+  marginBottom: 20,
+},
 
   input: {
     backgroundColor: '#fff',

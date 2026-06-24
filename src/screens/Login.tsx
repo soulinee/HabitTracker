@@ -100,18 +100,49 @@ const Login = () => {
                 'LOADED HABITS:',
                 habits
               );
+              const today =
+                      new Date()
+                        .toISOString()
+                        .split('T')[0];
+
+              const refreshedHabits =
+              habits.map(habit => {
+
+                if (
+                  habit.frequency ===
+                    'Daily' &&
+                  habit.lastCompletedDate !==
+                    today
+                ) {
+                  return {
+                    ...habit,
+                    completed: false,
+                    progress: 0,
+                  };
+                }
+
+                return habit;
+              });
 
               dispatch(
-              setHabits(habits)
+              setHabits(refreshedHabits)
+              );
+              console.log(
+                "DISPATCH DONE"
               );
 
 
-        } catch {
-          setFieldError(
-            'password',
-            'Wrong email or password'
-          );
-        }
+        } catch (error) {
+              console.log(
+                "LOGIN ERROR:",
+                error
+              );
+
+              setFieldError(
+                'password',
+                'Wrong email or password'
+              );
+            }
       }}
     >
       {({

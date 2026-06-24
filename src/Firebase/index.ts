@@ -21,8 +21,9 @@ const firebaseConfig = {
 
 // Initialize Firebase maakt verbinding met firebase project
 const app = initializeApp(firebaseConfig);
-//dit haalt deAuthentication service op van mijn firebase app
+//dit haalt deAuthentication service op van mijn firebase app auth is een firebase object
 export const auth = getAuth(app);
 //dit haalt firestore service op van mijn firebase app
 export const db = getFirestore(app);
+
 

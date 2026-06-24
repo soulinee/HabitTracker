@@ -32,12 +32,18 @@ type HomeNavigationProp =
   >;
 const Home = () =>
    {
+    //dit heb ik veranderd misschien daardoor dat het niet werkt 
     const navigation =
   useNavigation<HomeNavigationProp>();
   const habits = useSelector(
     (state: RootState) =>
       state.habits.habits
   );
+  console.log(
+  "REDUX HABITS:",
+  habits
+);
+
   const [selectedHabit, setSelectedHabit] =useState<Habit | null>( null );
 
 const [modalVisible, setModalVisible] = useState(false);
@@ -106,6 +112,7 @@ if (habits.length === 0) {
             frequency={item.frequency}
             goal={item.goal}
             completed={item.completed}
+             streak={item.streak}
           />
         </Pressable>
         )}

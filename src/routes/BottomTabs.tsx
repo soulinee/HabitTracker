@@ -11,6 +11,7 @@ const Tab = createBottomTabNavigator();
 export default function BottomTabs() {
   return (
     <Tab.Navigator
+    //route bevat de naam van de huidige tab
       screenOptions={({ route }) => ({
         headerShown: false,
 
